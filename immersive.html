@@ -1,0 +1,123 @@
+<link rel="import" href="../d2l-polymer-behaviors/d2l-dom.html">
+<link rel="import" href="../d2l-polymer-behaviors/d2l-dom-focus.html">
+<style>
+	.immersive {
+		left: 0;
+		position: absolute;
+		height: 100vh;
+		top: 0;
+		width: 100vw;
+	}
+	.immersive-parent {
+		position: static !important;
+	}
+</style>
+<script>
+(function() {
+	'use strict';
+
+	var immersive = {
+
+		toggle: function(elem) {
+			if (elem.classList.contains('immersive')) {
+				this._toNormal(elem);
+			} else {
+				this._toImmersive(elem);
+			}
+		},
+
+		_onFocus: function(e) {
+
+			// assumption - only one immersive element active at a time (no nesting... ok??)
+			var immersiveElement = document.querySelector('.immersive');
+
+			if (D2L.Dom.isComposedAncestor(immersiveElement, e.target)) {
+				// focused element is decendant of immersed element, we're cool...
+				return;
+			}
+
+			var focusable;
+
+			if (e.target.classList.contains('immersive-focus-back')) {
+
+				// user is tabbing backwards past beginning of immersive content, move focus to last focusable
+				focusable = D2L.Dom.Focus.getLastFocusableDescendant(immersiveElement);
+
+			} else {
+
+				// user has focused on element not within immersive element either because they've tabbed from outside,
+				// or they've tabbed past end of immersive content, move focus to first focusable
+				focusable = D2L.Dom.Focus.getFirstFocusableDescendant(immersiveElement);
+
+			}
+
+			if (focusable) {
+				focusable.focus();
+			}
+
+		},
+
+		_toImmersive: function(elem) {
+
+			// find positioned ancestors and make them static
+			var positionedParent = elem.offsetParent;
+			while(positionedParent !== document.body) {
+				positionedParent.classList.add('immersive-parent');
+				positionedParent = positionedParent.offsetParent;
+			}
+
+			// make immersive element full viewport
+			elem.classList.add('immersive');
+
+			// start capturing focus events
+			document.addEventListener('focus', this._onFocus, true);
+
+			// add back focus trap
+			var backElement = document.createElement('div');
+			backElement.classList.add('immersive-focus-back');
+			backElement.setAttribute('tabindex', '0');
+			elem.parentNode.insertBefore(backElement, elem);
+
+			// add forward focus trap
+			var forwardElement = document.createElement('div');
+			forwardElement.classList.add('immersive-focus-forward');
+			forwardElement.setAttribute('tabindex', '0');
+			if (elem.nextSibling) {
+				elem.parentNode.insertBefore(forwardElement, elem.nextSibling);
+			} else {
+				elem.parentNode.appendChild(forwardElement);
+			}
+
+		},
+
+		_toNormal: function(elem) {
+
+			// remove back/forward focus traps
+			elem.parentNode.removeChild(elem.previousSibling);
+			elem.parentNode.removeChild(elem.nextSibling);
+
+			// return immersive element to normal
+			elem.classList.remove('immersive');
+
+			// find previously positioned ancestors and make them positioned again
+			var parentNode = elem.parentNode;
+			while(parentNode !== document.body) {
+				if (parentNode.classList.contains('immersive-parent')) {
+					parentNode.classList.remove('immersive-parent');
+				}
+				parentNode = parentNode.parentNode;
+			}
+
+			// stop capturing focus events
+			document.removeEventListener('focus', this._onFocus, true);
+
+		}
+
+	};
+
+	immersive._onFocus = immersive._onFocus.bind(immersive);
+
+	window.immersive = immersive;
+
+})();
+</script>

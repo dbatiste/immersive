@@ -1,0 +1,66 @@
+<html>
+<head>
+	<title>Immersive Prototype</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://s.brightspace.com/lib/webcomponentsjs/0.7.21/webcomponents.min.js"></script>
+	<link rel="import" href="../immersive.html">
+	<style>
+		body {
+			color: white;
+			background-color: black;
+			font-family: sans-serif;
+			padding: 0;
+		}
+		a, a:focus, a:hover, a:visited {
+			color: white;
+		}
+		.container {
+			border: 1px solid white;
+			margin: 10px 0;
+			padding: 10px;
+		}
+		.immersive {
+			background-color: white;
+			color: black;
+		}
+		.immersive a {
+			color: black;
+		}
+	</style>
+	<script>
+		function toggle() {
+			var elem = document.getElementById('stuff');
+			immersive.toggle(elem);
+		}
+	</script>
+</head>
+<body>
+	<div style="position: relative; margin-top: 50px;">
+		<a href="http://www.desire2learn.com">before immersable link</a>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+		<div class="container">
+			<div id="stuff">
+				<div>
+					This is some immersable content. <a href="http://www.nasa.com">some link</a>
+				</div>
+				<button onclick="toggle();">toggle immersive</button>
+			</div>
+		</div>
+		<a href="http://www.google.com">after immersable link</a>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+		<p>Don't be so frosty!</p>
+	</div>
+</body>
+</html>

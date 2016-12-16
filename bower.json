@@ -1,0 +1,9 @@
+{
+  "name": "immersive",
+  "private": "true",
+  "description": "Prototype for toggling immersive view",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "d2l-polymer-behaviors": "~0.0.4"
+  }
+}
